@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { motion } from "framer-motion"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 type MenuCategory = {
@@ -18,49 +17,97 @@ type MenuItem = {
   description: string
   price: string
   image: string
-  isVegetarian: boolean
-  isSpicy?: boolean
 }
 
 export default function MenuSection() {
   const [selectedCategory, setSelectedCategory] = useState<string>("chaats")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Auto-scroll effect
+  // Infinite scroll effect with slow transition
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current
     if (!scrollContainer) return
 
-    let scrollPosition = 0
-    const scrollAmount = 1 // Adjust to control scroll speed
-    const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth
+    const currentCategory = menuCategories.find((category) => category.id === selectedCategory)
+    if (!currentCategory) return
 
-    const autoScroll = () => {
+    const itemCount = currentCategory.items.length
+    const itemWidth = 300 // Item width in pixels
+    const spacing = 24 // Spacing between items (space-x-6 = 1.5rem = 24px)
+    
+    const scrollToIndex = (index: number) => {
       if (scrollContainer) {
-        scrollPosition = (scrollPosition + scrollAmount) % maxScroll
-        scrollContainer.scrollLeft = scrollPosition
+        const scrollPosition = index * (itemWidth + spacing)
+        scrollContainer.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth'
+        })
       }
-      requestAnimationFrame(autoScroll)
     }
 
-    const animation = requestAnimationFrame(autoScroll)
-
-    // Pause scrolling when user hovers over the container
-    const handleMouseEnter = () => cancelAnimationFrame(animation)
-    const handleMouseLeave = () => requestAnimationFrame(autoScroll)
-
-    scrollContainer.addEventListener('mouseenter', handleMouseEnter)
-    scrollContainer.addEventListener('mouseleave', handleMouseLeave)
+    // Set up the scroll interval
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % itemCount
+        scrollToIndex(nextIndex)
+        return nextIndex
+      })
+    }, 5000) // Change every 5 seconds
 
     return () => {
-      cancelAnimationFrame(animation)
-      if (scrollContainer) {
-        scrollContainer.removeEventListener('mouseenter', handleMouseEnter)
-        scrollContainer.removeEventListener('mouseleave', handleMouseLeave)
-      }
+      clearInterval(interval)
     }
   }, [selectedCategory])
+
+  const handlePrevClick = () => {
+    const currentCategory = menuCategories.find((category) => category.id === selectedCategory)
+    if (!currentCategory) return
+    
+    const itemCount = currentCategory.items.length
+    setCurrentIndex((prevIndex) => {
+      const newIndex = (prevIndex - 1 + itemCount) % itemCount
+      
+      // Scroll to the new index
+      if (scrollContainerRef.current) {
+        const itemWidth = 300 // Item width
+        const spacing = 24 // Spacing between items
+        const scrollPosition = newIndex * (itemWidth + spacing)
+        
+        scrollContainerRef.current.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth'
+        })
+      }
+      
+      return newIndex
+    })
+  }
+
+  const handleNextClick = () => {
+    const currentCategory = menuCategories.find((category) => category.id === selectedCategory)
+    if (!currentCategory) return
+    
+    const itemCount = currentCategory.items.length
+    setCurrentIndex((prevIndex) => {
+      const newIndex = (prevIndex + 1) % itemCount
+      
+      // Scroll to the new index
+      if (scrollContainerRef.current) {
+        const itemWidth = 300 // Item width
+        const spacing = 24 // Spacing between items
+        const scrollPosition = newIndex * (itemWidth + spacing)
+        
+        scrollContainerRef.current.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth'
+        })
+      }
+      
+      return newIndex
+    })
+  }
 
   const menuCategories: MenuCategory[] = [
     {
@@ -73,24 +120,13 @@ export default function MenuSection() {
           description: "Crispy hollow puris filled with spicy potato mixture and tangy tamarind water",
           price: "$6.99",
           image: "/images/food_image_1.webp",
-          isVegetarian: true,
-          isSpicy: true,
         },
         {
           id: "food-image-2",
-          name: "Bhel Puri",
-          description: "Puffed rice, vegetables and tangy tamarind sauce",
-          price: "$5.99",
-          image: "/images/food_image_2.webp",
-          isVegetarian: true,
-        },
-        {
-          id: "food-image-3",
           name: "Dahi Puri",
           description: "Crispy puris topped with potatoes, yogurt, and chutneys",
           price: "$7.99",
           image: "/images/food_image_3.webp",
-          isVegetarian: true,
         },
         {
           id: "food-image-4",
@@ -98,8 +134,6 @@ export default function MenuSection() {
           description: "Crispy hollow puris filled with spicy potato mixture and tangy tamarind water",
           price: "$6.99",
           image: "/images/food_image_4.webp",
-          isVegetarian: true,
-          isSpicy: true,
         },
         {
           id: "food-image-5",
@@ -107,7 +141,6 @@ export default function MenuSection() {
           description: "Puffed rice, vegetables and tangy tamarind sauce",
           price: "$5.99",
           image: "/images/food_image_5.webp",
-          isVegetarian: true,
         },
         {
           id: "pani-puri",
@@ -115,30 +148,26 @@ export default function MenuSection() {
           description: "Crispy hollow puris filled with spicy potato mixture and tangy tamarind water",
           price: "$6.99",
           image: "/images/food_image_6.webp",
-          isVegetarian: true,
-          isSpicy: true,
         },
         {
           id: "bhel-puri",
           name: "Bhel Puri",
           description: "Puffed rice, vegetables and tangy tamarind sauce",
           price: "$5.99",
-          image: "/images/food_image_7.webp",
-          isVegetarian: true,
+          image: "/images/food_image_8.webp",
         },
         {
           id: "dahi-puri",
           name: "Dahi Puri",
           description: "Crispy puris topped with potatoes, yogurt, and chutneys",
           price: "$7.99",
-          image: "/images/food_image_8.webp",
-          isVegetarian: true,
+          image: "/images/food_image_9.webp",
         },
       ],
     },
     {
-      id: "curries",
-      name: "Curries",
+      id: "sandwhiches",
+      name: "Sandwhiches",
       items: [
         {
           id: "butter-chicken",
@@ -146,7 +175,6 @@ export default function MenuSection() {
           description: "Tender chicken in a rich tomato and butter sauce",
           price: "$14.99",
           image: "/images/food_image_1.webp",
-          isVegetarian: false,
         },
         {
           id: "paneer-tikka-masala",
@@ -154,14 +182,12 @@ export default function MenuSection() {
           description: "Cottage cheese cubes in a spiced tomato gravy",
           price: "$13.99",
           image: "/images/food_image_2.webp",
-          isVegetarian: true,
-          isSpicy: true,
         },
       ],
     },
     {
-      id: "breads",
-      name: "Breads",
+      id: "shakes",
+      name: "Shakes",
       items: [
         {
           id: "naan",
@@ -169,7 +195,6 @@ export default function MenuSection() {
           description: "Soft leavened flatbread brushed with butter",
           price: "$3.99",
           image: "/images/food_image_1.webp",
-          isVegetarian: true,
         },
         {
           id: "roti",
@@ -177,7 +202,6 @@ export default function MenuSection() {
           description: "Whole wheat flatbread baked in tandoor",
           price: "$2.99",
           image: "/images/food_image_2.webp",
-          isVegetarian: true,
         },
       ],
     },
@@ -191,7 +215,6 @@ export default function MenuSection() {
           description: "Deep-fried milk solids soaked in sugar syrup",
           price: "$4.99",
           image: "/images/food_image_1.webp",
-          isVegetarian: true,
         },
         {
           id: "rasmalai",
@@ -199,7 +222,6 @@ export default function MenuSection() {
           description: "Soft cottage cheese patties in sweetened milk",
           price: "$5.99",
           image: "/images/food_image_2.webp",
-          isVegetarian: true,
         },
       ],
     },
@@ -214,6 +236,7 @@ export default function MenuSection() {
   const selectCategory = (categoryId: string) => {
     setSelectedCategory(categoryId)
     setIsDropdownOpen(false)
+    setCurrentIndex(0) // Reset index when changing category
   }
 
   return (
@@ -280,46 +303,57 @@ export default function MenuSection() {
             )}
           </div>
         </div>
-
-        {/* Menu Items - Horizontal Scrolling */}
-        <div 
-          ref={scrollContainerRef}
-          className="flex space-x-6 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory"
-          style={{ scrollBehavior: 'smooth' }}
-        >
-          {currentCategory?.items.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="rounded-xl overflow-hidden shadow-lg flex-shrink-0 snap-center hover:scale-125"
-              style={{ width: '300px' }}
-            >
-              <div className="relative h-64 overflow-hidden rounded-t-full">
-                <Image
-                  src={item.image || "/placeholder.svg"}
-                  alt={item.name}
-                  fill
-                  className="object-cover transition-transform duration-500 bg-black"
-                  sizes="300px"
-                />
-                {/* <div className="absolute top-2 right-2 flex space-x-2">
-                  {item.isVegetarian && (
-                    <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Veg</span>
-                  )}
-                  {item.isSpicy && <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">Spicy</span>}
-                </div> */}
-              </div>
-              <div className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-white">{item.name}</h3>
-                  <span className="text-yellow-400 font-bold">{item.price}</span>
+        
+        {/* Menu Items - Horizontal Scrolling with Navigation */}
+        <div className="relative">
+          <div 
+            ref={scrollContainerRef}
+            className="flex space-x-6 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory"
+            style={{ scrollBehavior: 'smooth', transitionDuration: '2s' }}
+          >
+            {currentCategory?.items.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-xl overflow-hidden shadow-lg flex-shrink-0 snap-center"
+                style={{ width: '300px' }}
+              >
+                <div className="relative h-64 overflow-hidden rounded-t-full">
+                  <Image
+                    src={item.image || "/placeholder.svg"}
+                    alt={item.name}
+                    fill
+                    className="object-cover bg-black"
+                    sizes="300px"
+                  />
                 </div>
-                <p className="text-gray-400 text-sm">{item.description}</p>
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-bold text-white">{item.name}</h3>
+                    <span className="text-yellow-400 font-bold">{item.price}</span>
+                  </div>
+                  <p className="text-gray-400 text-sm">{item.description}</p>
+                </div>
               </div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
+          
+          {/* Navigation Buttons */}
+          <div className="flex justify-center mt-6 space-x-4">
+            <button 
+              onClick={handlePrevClick}
+              className="bg-yellow-500 text-black rounded-full p-3 hover:bg-yellow-600 transition-colors"
+              aria-label="Previous item"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button 
+              onClick={handleNextClick}
+              className="bg-yellow-500 text-black rounded-full p-3 hover:bg-yellow-600 transition-colors"
+              aria-label="Next item"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </div>
 
