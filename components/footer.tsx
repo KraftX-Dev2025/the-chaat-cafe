@@ -90,33 +90,33 @@ export default function Footer() {
             <h3 className="text-xl font-bold mb-6 uppercase">Favorite Picks</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/menu" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
+                <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2 text-yellow-400" />
-                  Butter Chicken
+                  Casino Pani Puri
                 </Link>
               </li>
               <li>
-                <Link href="/menu" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
+                <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2 text-yellow-400" />
-                  Paneer Tikka Masala
+                  Milkshakes
                 </Link>
               </li>
               <li>
-                <Link href="/menu" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
+                <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2 text-yellow-400" />
-                  Chicken Biryani
+                  Chaat
                 </Link>
               </li>
               <li>
-                <Link href="/menu" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
+                <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2 text-yellow-400" />
-                  Samosa Chaat
+                  Sandwhiches
                 </Link>
               </li>
               <li>
-                <Link href="/menu" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
+                <Link href="#" className="text-gray-400 hover:text-yellow-400 transition-colors flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2 text-yellow-400" />
-                  Gulab Jamun
+                  Dabeli
                 </Link>
               </li>
             </ul>
