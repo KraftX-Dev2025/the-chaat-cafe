@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import Image from "next/image"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -8,17 +8,16 @@ import Lenis from "@studio-freight/lenis"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import MenuSection from "@/components/menu-section"
-import GallerySection from "@/components/gallery-section"
+// import GallerySection from "@/components/gallery-section"
 import GallerySection2 from "@/components/gallery-section-2"
 import LocationSection from "@/components/location-section"
 import TestimonialSection from "@/components/testimonial-section"
-import MobileInfoMenu from "@/components/mobile-info-menu"
-import MenuDisplay from "@/components/menu-display"
+// import MobileInfoMenu from "@/components/mobile-info-menu"
+// import MenuDisplay from "@/components/menu-display";
+import Banner from "@/components/banner"
 
 export default function Home() {
-  const heroRef = useRef<HTMLDivElement>(null)
   const aboutRef = useRef<HTMLDivElement>(null)
-  const floatingDishRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Register ScrollTrigger plugin
@@ -39,58 +38,6 @@ export default function Home() {
     }
 
     requestAnimationFrame(raf)
-
-    // Hero animations
-    if (heroRef.current) {
-      const tl = gsap.timeline()
-      tl.from(".hero-title", {
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        ease: "power4.out",
-      })
-        .from(
-          ".hero-subtitle",
-          {
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out",
-          },
-          "-=0.6",
-        )
-        .from(
-          ".hero-button",
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          },
-          "-=0.4",
-        )
-        .from(
-          ".hero-image-static",
-          {
-            scale: 0.8,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power2.out",
-          },
-          "-=0.6",
-        )
-    }
-
-    // Floating dish animation
-    if (floatingDishRef.current) {
-      gsap.to(floatingDishRef.current, {
-        y: 30,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      })
-    }
 
     // About section animations
     if (aboutRef.current) {
@@ -127,82 +74,9 @@ export default function Home() {
 
   return (
     <div className="overflow-hidden">
-      {/* Mobile Info Menu - Only visible on mobile */}
-      {/* <MobileInfoMenu /> */}
+      {/* Hero Section - Now using Banner component */}
+      <Banner />
 
-      {/* Hero Section */}
-      <section
-        ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
-      >
-        <div className="absolute inset-0 z-0 opacity-20">
-          <Image
-            src="/images/food_image_9.webp"
-            alt="Chaat Cafe Hero Background"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-        </div>
-        <div className="container relative z-10 px-4 py-20 pt-24 flex flex-col md:flex-row items-center">
-          {/* Text content - Left side on desktop */}
-          <div className="w-full md:w-1/2 text-center md:text-left mb-12 md:mb-0">
-            <div className="inline-block bg-yellow-500 px-4 py-1 rounded-full mb-4">
-              <span className="text-black font-medium">Authentic Indian Cuisine</span>
-            </div>
-            <h1 className="hero-title text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-              Experience Authentic <span className="text-yellow-400">Indian Street Food</span>
-            </h1>
-            <p className="hero-subtitle text-xl md:text-2xl text-gray-200 mb-8 max-w-xl">
-            Sinhgad Rd, near Pu. La. Deshpande Garden, Sarita Vihar Phase 2, Dattawadi, Pune, Maharashtra 411030
-            </p>
-            <div className="mb-8">
-              <p className="text-gray-300 mb-2">Need help? Call us</p>
-              <p className="text-yellow-400 text-2xl font-bold mb-2">+4800 567 8900</p>
-              <p className="text-gray-300">support@example.com</p>
-            </div>
-            <Button
-              className="hero-button bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-6 text-lg rounded-full"
-              size="lg"
-            >
-              View Our Menu <ChevronRight className="ml-2 h-5 w-5" />
-            </Button>
-          </div>
-
-          {/* Images - Right side on desktop */}
-          <div className="w-full md:w-1/2 relative h-[400px] md:h-[500px]">
-            {/* Static image with unique shape */}
-            <div className="hero-image-static absolute top-0 right-0 w-[250px] h-[250px] md:w-[300px] md:h-[300px]">
-              <div className="relative w-full h-full overflow-hidden rounded-tr-[80px] rounded-bl-[80px]">
-                <Image
-                  src="/images/food_image_1.webp"
-                  alt="Chaat Dish"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 250px, 300px"
-                />
-              </div>
-            </div>
-
-            {/* Floating/moving image */}
-            <div
-              ref={floatingDishRef}
-              className="absolute bottom-0 left-0 md:left-20 w-[200px] h-[200px] md:w-[250px] md:h-[250px]"
-            >
-              <div className="relative w-full h-full overflow-hidden rounded-full">
-                <Image
-                  src="/images/food_image_2.webp"
-                  alt="Floating Dish"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 200px, 250px"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
       {/* About Section */}
       <section ref={aboutRef} className="py-20 bg-black">
         <div className="container mx-auto px-4">
@@ -240,14 +114,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Menu Display Section */}
-      {/* <MenuDisplay /> */}
-
       {/* Menu Section */}
       <MenuSection />
 
       {/* Gallery Section */}
-      {/* <GallerySection /> */}
       <GallerySection2 />
 
       {/* Testimonials Section */}

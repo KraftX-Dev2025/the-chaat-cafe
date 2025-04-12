@@ -11,7 +11,10 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "The Chaat Cafe - Authentic Indian Street Food",
   description: "Experience the authentic flavors of Indian street food at Chaat Cafe",
-    generator: 'v0.dev'
+  icons: {
+    icon: '/images/chaat-cafe-logo.webp',
+    apple: '/images/chaat-cafe-logo.webp',
+  }
 }
 
 export default function RootLayout({
@@ -31,6 +34,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-import './globals.css'
